@@ -1,5 +1,5 @@
 name: lichess-ponder
-version: 0.1.0.2
+version: 0.1.0.3
 description: parse clock time from Lichess games
 author: Egor Lappo <egor.lappo.512@gmail.com>
 github: EgorLappo/lichess-ponder

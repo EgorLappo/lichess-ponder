@@ -18,7 +18,7 @@
       flake = {
         githubActions = nix-github-actions.lib.mkGithubMatrix {
           checks =
-            nixpkgs.lib.getAttrs [ "x86_64-linux" ] self.packages;
+            nixpkgs.lib.getAttrs [ "x86_64-linux" ] self.checks;
         };
       };
 
@@ -57,7 +57,7 @@
 
         # haskell-flake doesn't set the default package, but you can do it here.
         packages.default = self'.packages.lichess-ponder;
-        checks.default = self'.packages.lichess-ponder;
+        checks.lichess-ponder = self'.packages.lichess-ponder;
       };
     };
 }

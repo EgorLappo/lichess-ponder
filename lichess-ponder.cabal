@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           lichess-ponder
-version:        0.1.0.2
+version:        0.1.0.3
 description:    parse clock time from Lichess games
 homepage:       https://github.com/EgorLappo/lichess-ponder#readme
 bug-reports:    https://github.com/EgorLappo/lichess-ponder/issues

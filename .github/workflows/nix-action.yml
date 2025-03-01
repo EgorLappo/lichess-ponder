@@ -41,7 +41,7 @@ jobs:
         if: ${{ matrix.name }} == 'lichess-ponder'
         with:
           files: lichess-ponder-${{ github.ref_name }}-${{ matrix.system }}.tar.gz
-          name: $${{ github.ref_name }}-${{ matrix.system }}
+          name: ${{ github.ref_name }}-${{ matrix.system }}
         
         
     
