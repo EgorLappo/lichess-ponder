@@ -3,6 +3,8 @@ name: build
 on:
   pull_request:
   push:
+    tags:
+      - 'v*'
 
 jobs:
   nix-matrix:
@@ -28,4 +30,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
-      - run: nix build -L '.#${{ matrix.attr }}'
+      - name: nix build
+        run: nix build -L '.#${{ matrix.attr }}'
+      - name: compress
+        run: tar -cvz -f lichess-ponder-${{ github.ref }}.tar.gz -C result/bin/ lichess-ponder
+      - name: make release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: lichess-ponder-${{ github.ref }}.tar.gz
+        
+        
+    
