@@ -25,6 +25,8 @@ jobs:
     name: ${{ matrix.name }} (${{ matrix.system }})
     needs: nix-matrix
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
     strategy:
       matrix: ${{fromJSON(needs.nix-matrix.outputs.matrix)}}
     steps:
@@ -33,11 +35,13 @@ jobs:
       - name: nix build
         run: nix build -L '.#${{ matrix.attr }}'
       - name: compress
-        run: tar -cvz -f lichess-ponder-${{ github.ref }}.tar.gz -C result/bin/ lichess-ponder
+        run: tar -cvz -f lichess-ponder-${{ github.ref_name }}-${{ matrix.system }}.tar.gz -C result/bin/ lichess-ponder
       - name: make release
         uses: softprops/action-gh-release@v2
+        if: ${{ matrix.name }} == 'lichess-ponder'
         with:
-          files: lichess-ponder-${{ github.ref_name }}.tar.gz
+          files: lichess-ponder-${{ github.ref_name }}-${{ matrix.system }}.tar.gz
+          name: $${{ github.ref_name }}-${{ matrix.system }}
         
         
     
