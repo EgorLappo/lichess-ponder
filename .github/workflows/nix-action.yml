@@ -33,9 +33,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
       - name: nix build
-        run: nix build -L '.#${{ matrix.attr }}'
+        run: nix bundle -L '.#${{ matrix.attr }}'
+      - run: ls -lah .
       - name: compress
-        run: tar -cvz -f lichess-ponder-${{ github.ref_name }}-${{ matrix.system }}.tar.gz -C result/bin/ lichess-ponder
+        run: tar -chvz -f lichess-ponder-${{ github.ref_name }}-${{ matrix.system }}.tar.gz lichess-ponder-arx
       - name: make release
         uses: softprops/action-gh-release@v2
         if: ${{ matrix.name }} == 'lichess-ponder'
