@@ -1,5 +1,8 @@
 name: lichess-ponder
 version: 0.1.0.0
+description: parse clock time from Lichess games
+author: Egor Lappo <egor.lappo.512@gmail.com>
+github: EgorLappo/lichess-ponder
 
 dependencies:
   - base >= 4.7 && < 5
@@ -39,6 +42,7 @@ tests:
       - hspec
       - lichess-ponder
 
+language: GHC2021
 default-extensions:
   - BangPatterns
   - BinaryLiterals
@@ -80,6 +84,7 @@ default-extensions:
   - ViewPatterns
 
 ghc-options:
+  - -j8
   - -Weverything
   - -Wno-missing-signatures
   - -Wno-missing-exported-signatures # missing-exported-signatures turns off the more strict -Wmissing-signatures.

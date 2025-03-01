@@ -3,11 +3,24 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     haskell-flake.url = "github:srid/haskell-flake";
+    nix-github-actions = {
+      url = "github:nix-community/nix-github-actions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs@{ self, nixpkgs, flake-parts, ... }:
+  outputs = inputs@{ self, nixpkgs, flake-parts, nix-github-actions, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = nixpkgs.lib.systems.flakeExposed;
       imports = [ inputs.haskell-flake.flakeModule ];
+
+      debug = true;
+
+      flake = {
+        githubActions = nix-github-actions.lib.mkGithubMatrix {
+          checks =
+            nixpkgs.lib.getAttrs [ "x86_64-linux" ] self.packages;
+        };
+      };
 
       perSystem = { self', pkgs, ... }: {
 
@@ -32,7 +45,10 @@
             # Enabled by default
             # enable = true;
 
-            tools = hp: { ormolu = hp.ormolu; };
+            tools = hp: {
+              ormolu = hp.ormolu;
+              hpack = hp.hpack;
+            };
 
             # Check that haskell-language-server works
             # hlsCheck.enable = true; # Requires sandbox to be disabled
@@ -40,7 +56,8 @@
         };
 
         # haskell-flake doesn't set the default package, but you can do it here.
-        packages.default = self'.packages.example;
+        packages.default = self'.packages.lichess-ponder;
+        checks.default = self'.packages.lichess-ponder;
       };
     };
 }
