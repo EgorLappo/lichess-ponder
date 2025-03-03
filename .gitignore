@@ -1,9 +1,12 @@
 .direnv
 .ghc.environment*
 .hie
-cabal.project.local
+#cabal.project.local
 dist-newstyle
 nixkell.cabal
 result*
 *~
 .DS_Store
+
+# data
+*.pgn.zst
