@@ -1,8 +1,11 @@
 module Ponder where
 
+import Control.DeepSeq
+import Control.Monad (liftM2)
 import Data.List (foldl')
 import Data.Text (Text)
 import Data.Text qualified as T
+import GHC.Generics
 import Parse
 import Skill
 
@@ -12,7 +15,9 @@ data PTime = PTime
   { meanTime :: !Double,
     itemCnt :: !Int
   }
-  deriving stock (Show, Eq)
+  deriving stock (Show, Eq, Generic)
+
+instance NFData PTime
 
 newPTime :: [PTime]
 newPTime = replicate (length skillGroups) (PTime 0 0)
@@ -46,7 +51,9 @@ data MapNode = MapNode
     time :: ![PTime],
     leaves :: ![MapNode]
   }
-  deriving stock (Show)
+  deriving stock (Show, Generic)
+
+instance NFData MapNode
 
 -- we don't start thinking until after the first move, so the root is a list
 type MoveMap = [MapNode]
@@ -91,7 +98,15 @@ buildInsert mm pos = go mm moves
 
 -- helper function to convert Game to an insertable list
 --   (skill, san, clock)
-type GameList = [(Maybe Int, Text, Double)]
+
+data MoveStat = MoveStat
+  { skill :: !(Maybe Int),
+    san :: !Text,
+    clk :: !Double
+  }
+  deriving stock (Show, Generic)
+
+type GameList = [MoveStat]
 
 -- key function in which we convert clock values for both players
 -- to time spent on each move
@@ -106,14 +121,18 @@ gameToList (Game ws bs time inc ms) = go time time True ms
       GameList
     go _ _ _ [] = []
     go wclk bclk white ((Move san clk) : xs)
-      | white = (ws, san, fromIntegral (wclk - clk + inc)) : go clk bclk (not white) xs
-      | otherwise = (bs, san, fromIntegral (bclk - clk + inc)) : go wclk clk (not white) xs
+      | white = MoveStat ws san (fromIntegral (wclk - clk + inc)) : go clk bclk (not white) xs
+      | otherwise = MoveStat bs san (fromIntegral (bclk - clk + inc)) : go wclk clk (not white) xs
 
+-- insert games one-by-one with foldl'
+-- and don't forget to force evaluation of the map after each insertion
+--   (without deepseq the input pgn file is never garbage collected,
+--    hitting OOM errors even with 128GB of RAM)
 process ::
   MoveMap ->
   [Game] ->
   MoveMap
-process mm = foldl' insert mm . map gameToList
+process mm = foldl' (liftM2 (.) deepseq insert) mm . map gameToList
 
 insert ::
   MoveMap ->
@@ -124,7 +143,7 @@ insert mm [] = mm
 -- inserting into an empty movemap does nothing!
 insert [] _ = []
 -- inserting otherwise looks over all nodes
-insert (node@(MapNode c t leaves) : ns) gameList@((sk, san, clk) : xs)
+insert (node@(MapNode c t leaves) : ns) gameList@((MoveStat sk san clk) : xs)
   | c == san = MapNode c (incrementTime sk clk t) (insert leaves xs) : ns
   | otherwise = node : insert ns gameList
 

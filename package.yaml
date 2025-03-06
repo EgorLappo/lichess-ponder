@@ -15,7 +15,8 @@ dependencies:
   - attoparsec
   - replace-attoparsec
   - optparse-applicative
-    
+  - aeson
+     
 library:
   source-dirs: src
 

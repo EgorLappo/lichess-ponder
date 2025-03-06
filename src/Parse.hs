@@ -12,7 +12,6 @@ import Data.Maybe (catMaybes, fromJust, fromMaybe, isNothing)
 import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.Encoding (decodeASCII)
-import Data.Text.IO qualified as T
 import Data.Text.Read qualified as T
 import Skill (getSkill)
 

@@ -8,7 +8,6 @@ import Data.Text.IO qualified as TIO
 import Options.Applicative
 import Parse
 import Ponder
-import Text.Pretty.Simple (pPrint)
 
 data Options = Options
   { positionList :: !FilePath,
@@ -67,10 +66,7 @@ main = do
   positions <- T.lines . T.decodeASCII <$> BS.readFile (positionList opts)
   -- initialize the map
   let !moveMap = makeMoveMap positions
-  -- pPrint moveMap
   games <- run (tmin opts, tmax opts)
-  -- mapM_ (pPrint . gameToList) games
-  -- pPrint (process moveMap games)
   writeCSV (output opts) (formatMap $ process moveMap games)
 
 writeCSV :: FilePath -> [(Text, Int, Double, Int)] -> IO ()
