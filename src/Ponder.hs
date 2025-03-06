@@ -1,4 +1,4 @@
-module Ponder where
+module Ponder (makeMoveMap, formatMap, gameToList, process) where
 
 import Control.DeepSeq
 import Control.Monad (liftM2)
