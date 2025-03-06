@@ -125,7 +125,7 @@ executable lichess-ponder
       TypeApplications
       TypeOperators
       ViewPatterns
-  ghc-options: -j8 -Weverything -Wno-missing-signatures -Wno-missing-exported-signatures -Wno-missing-import-lists -Wno-missed-specialisations -Wno-all-missed-specialisations -Wno-unsafe -Wno-safe -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-export-lists -Wno-missing-home-modules -Wno-missing-safe-haskell-mode -Wno-prepositive-qualified-module -Wno-unused-packages -Wno-implicit-prelude -Wno-missing-kind-signatures -Wno-unused-do-bind -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -j8 -Weverything -Wno-missing-signatures -Wno-missing-exported-signatures -Wno-missing-import-lists -Wno-missed-specialisations -Wno-all-missed-specialisations -Wno-unsafe -Wno-safe -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-export-lists -Wno-missing-home-modules -Wno-missing-safe-haskell-mode -Wno-prepositive-qualified-module -Wno-unused-packages -Wno-implicit-prelude -Wno-missing-kind-signatures -Wno-unused-do-bind -O -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , attoparsec

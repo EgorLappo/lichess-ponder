@@ -25,6 +25,7 @@ executables:
     main: Main.hs
     source-dirs: bin
     ghc-options:
+      - -O
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
